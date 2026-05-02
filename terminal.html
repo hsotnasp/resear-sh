@@ -1,0 +1,1328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>resear.sh — Intelligence Terminal · BISLERI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:        #0d0f12;
+      --bg-panel:  #111419;
+      --bg-inset:  #0e1116;
+      --border:    #1d2229;
+      --accent:    #7a9eb5;
+      --accent-lo: #3a5568;
+      --accent-dim:#162030;
+      --text:      #cdd2dc;
+      --text-2:    #606878;
+      --text-3:    #363c48;
+      --green:     #4e9467;
+      --red:       #8a5252;
+      --bar-fill:  #7a9eb5;
+      --bar-empty: #1a1e26;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 0 60px;
+    }
+
+    /* ─── FADE IN ─── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    /* ─── HEADER BAR ─── */
+    .header-bar {
+      background: #0a0c0f;
+      border-bottom: 1px solid var(--border);
+      padding: 13px 28px;
+      font-size: 11.5px;
+      color: var(--text-2);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-prompt {
+      color: var(--accent);
+      margin-right: 7px;
+      font-weight: 600;
+    }
+
+    .header-brand { color: var(--accent); font-weight: 700; letter-spacing: 0.06em; }
+    .header-sep   { color: var(--text-3); margin: 0 10px; }
+    .header-key   { color: var(--text-2); }
+    .header-val   { color: var(--text); }
+
+    /* ─── GRID ─── */
+    .panels-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--border);
+      margin-top: 2px;
+    }
+
+    @media (max-width: 720px) {
+      .panels-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel {
+      background: var(--bg-panel);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .panel-header {
+      background: #0e1116;
+      border-bottom: 1px solid var(--border);
+      padding: 10px 22px;
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-badge {
+      font-size: 9px;
+      color: var(--text-3);
+      font-weight: 400;
+      letter-spacing: 0.08em;
+    }
+
+    .panel-body { padding: 24px; }
+
+    /* ─── PANEL A — BRAND SIGNAL ─── */
+    .brand-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 4px;
+      letter-spacing: 0.04em;
+    }
+    .brand-meta {
+      font-size: 10.5px;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+
+    .kv-table { width: 100%; border-collapse: collapse; margin-bottom: 18px; }
+    .kv-table td {
+      padding: 5px 0;
+      vertical-align: top;
+      font-size: 11px;
+    }
+    .kv-table td:first-child {
+      color: var(--text-2);
+      width: 52%;
+      padding-right: 10px;
+    }
+    .kv-table td:last-child { color: var(--text); }
+
+    .inline-bar {
+      display: inline-block;
+      height: 6px;
+      background: var(--bar-fill);
+      vertical-align: middle;
+      margin-right: 2px;
+      width: 0;
+      transition: width 1s ease;
+    }
+    .inline-bar-empty {
+      display: inline-block;
+      height: 6px;
+      background: var(--bar-empty);
+      vertical-align: middle;
+    }
+
+    .section-divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 18px 0;
+    }
+
+    .thesis-block {
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent-lo);
+      padding: 14px 16px;
+      font-size: 10.5px;
+      color: var(--text-2);
+      line-height: 1.72;
+      margin-bottom: 14px;
+    }
+    .thesis-label {
+      font-size: 9px;
+      color: var(--accent);
+      letter-spacing: 0.14em;
+      margin-bottom: 7px;
+      font-weight: 600;
+    }
+
+    .stat-row {
+      display: flex;
+      gap: 28px;
+      margin-top: 18px;
+    }
+    .stat-item { text-align: center; }
+    .stat-val {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .stat-lbl {
+      font-size: 9px;
+      color: var(--text-3);
+      margin-top: 5px;
+      letter-spacing: 0.12em;
+    }
+
+    /* ─── PANEL B — PROPERTY FOOTPRINT ─── */
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+    }
+    .data-table th {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 0 8px 10px 0;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+    }
+    .data-table th:last-child { padding-right: 0; }
+    .data-table td {
+      padding: 7px 8px 7px 0;
+      color: var(--text);
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    .data-table td:last-child { padding-right: 0; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table .year { color: var(--accent); font-weight: 600; white-space: nowrap; }
+    .data-table .role { color: var(--text-2); }
+    .data-table .type-official {
+      color: var(--green);
+      font-size: 9.5px;
+      font-weight: 600;
+    }
+    .data-table .type-other {
+      color: var(--text-3);
+      font-size: 9.5px;
+    }
+
+    .cat-chart { margin-top: 20px; }
+    .cat-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+    .cat-label {
+      font-size: 9.5px;
+      color: var(--text-2);
+      width: 130px;
+      flex-shrink: 0;
+    }
+    .cat-bar-wrap {
+      flex: 1;
+      height: 7px;
+      background: var(--bar-empty);
+      position: relative;
+      overflow: hidden;
+    }
+    .cat-bar-fill {
+      height: 100%;
+      background: var(--bar-fill);
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .cat-pct {
+      font-size: 9.5px;
+      color: var(--text-2);
+      width: 28px;
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    /* ─── PANEL C — COMMUNITY MATRIX ─── */
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+    }
+    .matrix-table th {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 0 6px 10px 0;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .matrix-table td {
+      padding: 7px 6px 7px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .matrix-table tr:last-child td { border-bottom: none; }
+    .comm-name { color: var(--text); font-size: 10.5px; }
+    .comm-type { color: var(--text-2); font-size: 9.5px; }
+    .perm-bar-wrap {
+      width: 64px;
+      height: 6px;
+      background: var(--bar-empty);
+      overflow: hidden;
+      display: inline-block;
+    }
+    .perm-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      width: 0;
+      transition: width 1.3s cubic-bezier(0.4,0,0.2,1);
+    }
+    .fit-score { color: var(--text); font-size: 10.5px; white-space: nowrap; }
+    .depth-dots { white-space: nowrap; }
+    .dot-full  { color: var(--accent); }
+    .dot-empty { color: var(--text-3); }
+
+    .matrix-note {
+      margin-top: 18px;
+      font-size: 9.5px;
+      color: var(--text-3);
+      border-top: 1px solid var(--border);
+      padding-top: 12px;
+      line-height: 1.75;
+    }
+
+    /* ─── PANEL D — MEASUREMENT DEPTH ─── */
+    .measure-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10.5px;
+    }
+    .measure-table th {
+      color: var(--accent);
+      font-size: 9px;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      padding: 0 0 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .measure-table th:first-child { text-align: left; }
+    .measure-table th:not(:first-child) { text-align: right; padding-left: 8px; }
+    .measure-table td {
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+    .measure-table tr:last-child td { border-bottom: none; }
+    .axis-label { color: var(--text-2); font-size: 10.5px; width: 96px; }
+    .bar-cell { padding-left: 8px; }
+    .bar-stack {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .bar-track {
+      width: 80px;
+      height: 6px;
+      background: var(--bar-empty);
+      overflow: hidden;
+    }
+    .bar-fill-trad {
+      height: 100%;
+      background: #2e3848;
+      width: 0;
+      transition: width 1.1s cubic-bezier(0.4,0,0.2,1);
+    }
+    .bar-fill-brand {
+      height: 100%;
+      background: var(--bar-fill);
+      width: 0;
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+    .bar-pct {
+      font-size: 9.5px;
+      width: 28px;
+      text-align: right;
+    }
+    .pct-trad  { color: var(--text-3); }
+    .pct-brand { color: var(--accent); }
+
+    .levi-block {
+      background: var(--bg-inset);
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--accent);
+      padding: 16px 18px;
+      margin-top: 20px;
+    }
+    .levi-score {
+      font-size: 30px;
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+    }
+    .levi-label {
+      font-size: 9px;
+      color: var(--text-2);
+      letter-spacing: 0.12em;
+      margin-bottom: 6px;
+    }
+    .levi-desc {
+      font-size: 9.5px;
+      color: var(--text-3);
+      margin-top: 8px;
+      line-height: 1.65;
+    }
+
+    /* ─── PANEL E — PARAMETERS ─── */
+    .panel-e {
+      background: var(--bg-panel);
+      border-top: 2px solid var(--border);
+    }
+
+    .params-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+    }
+
+    @media (max-width: 720px) {
+      .params-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 420px) {
+      .params-grid { grid-template-columns: 1fr; }
+    }
+
+    .param-col {
+      padding: 22px 24px;
+      border-right: 1px solid var(--border);
+    }
+    .param-col:last-child { border-right: none; }
+
+    .param-col-title {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--accent);
+      letter-spacing: 0.16em;
+      margin-bottom: 14px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .param-item {
+      font-size: 10px;
+      color: var(--text-2);
+      padding: 4px 0;
+      display: flex;
+      gap: 8px;
+      line-height: 1.5;
+    }
+    .param-item::before {
+      content: '◈';
+      color: var(--accent-lo);
+      flex-shrink: 0;
+      margin-top: 0.5px;
+    }
+
+    .panel-e-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 10.5px;
+      color: var(--accent);
+      font-style: italic;
+    }
+
+    /* ─── STATUS BAR ─── */
+    .status-bar {
+      background: #090b0e;
+      border-top: 1px solid var(--border);
+      padding: 10px 28px;
+      font-size: 10.5px;
+      color: var(--text-3);
+      display: flex;
+      align-items: center;
+      gap: 0;
+      flex-wrap: wrap;
+    }
+
+    .status-live {
+      color: #0d0f12;
+      background: var(--green);
+      padding: 2px 8px;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      margin-right: 16px;
+    }
+
+    .status-sep { margin: 0 12px; color: var(--text-3); }
+
+    /* ─── PANEL F — KNOWLEDGE GRAPH ─── */
+    .panel-f-graph {
+      background: var(--bg-panel);
+      border-top: 2px solid var(--border);
+      margin-top: 2px;
+    }
+    .graph-shell {
+      position: relative;
+      background: #06080a;
+      overflow: hidden;
+      line-height: 0;
+    }
+    .graph-shell canvas {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .crt-scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        transparent 0px,
+        transparent 3px,
+        rgba(0, 0, 0, 0.18) 3px,
+        rgba(0, 0, 0, 0.18) 4px
+      );
+      pointer-events: none;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER BAR -->
+  <div class="header-bar">
+    <span class="header-prompt">&gt;</span>
+    <span class="header-brand">RESEAR.SH</span>
+    <span class="header-sep">·</span>
+    <span class="header-key">INTELLIGENCE TERMINAL</span>
+    <span class="header-sep">·</span>
+    <span class="header-key">brand:</span>&nbsp;<span class="header-val">BISLERI</span>
+    <span class="header-sep">·</span>
+    <span class="header-key">depth:</span>&nbsp;<span class="header-val">FULL</span>
+    <span class="header-sep">·</span>
+    <span class="header-key">updated:</span>&nbsp;<span class="header-val">2026-04-29</span>
+  </div>
+
+  <div class="page-wrap">
+
+    <!-- 2×2 PANEL GRID -->
+    <div class="panels-grid fade-in">
+
+      <!-- PANEL A -->
+      <div class="panel">
+        <div class="panel-header">
+          BRAND SIGNAL PROFILE
+          <span class="panel-badge">A</span>
+        </div>
+        <div class="panel-body">
+          <div class="brand-name">BISLERI INTERNATIONAL</div>
+          <div class="brand-meta">FMCG · Packaged Water · Beverages &nbsp;·&nbsp; Founded 1969 · India</div>
+
+          <table class="kv-table">
+            <tr>
+              <td>Portfolio Type</td>
+              <td>COMMUNITY BUILDER</td>
+            </tr>
+            <tr>
+              <td>Renewal Behavior</td>
+              <td>ALWAYS RENEWS IF ROI VISIBLE</td>
+            </tr>
+            <tr>
+              <td>Exit Trigger</td>
+              <td>BRAND REPOSITIONING</td>
+            </tr>
+            <tr>
+              <td>Defensive Risk</td>
+              <td>
+                MEDIUM &nbsp;
+                <span class="inline-bar" data-w="55px"></span><span class="inline-bar-empty" style="width:40px;"></span>
+              </td>
+            </tr>
+            <tr>
+              <td>Competitor Threat</td>
+              <td style="color:var(--red)">Coca-Cola · PepsiCo · Kinley</td>
+            </tr>
+          </table>
+
+          <hr class="section-divider">
+
+          <div class="thesis-block">
+            <div class="thesis-label">STRATEGIC THESIS</div>
+            "Builds visibility through hydration-as-lifestyle positioning — showing up at every high-sweat, high-attendance cultural moment regardless of category. Sports to sustainability to music."
+          </div>
+
+          <div class="thesis-block">
+            <div class="thesis-label">AUDIENCE THESIS</div>
+            "Targets Gen Z and sports communities to make hydration a lifestyle signal, not a utility purchase."
+          </div>
+
+          <div class="stat-row">
+            <div class="stat-item">
+              <div class="stat-val">15</div>
+              <div class="stat-lbl">COMMUNITIES</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val">33+</div>
+              <div class="stat-lbl">PROPERTIES</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val">2021</div>
+              <div class="stat-lbl">DATA FROM</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-val">2026</div>
+              <div class="stat-lbl">TO</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL B -->
+      <div class="panel">
+        <div class="panel-header">
+          PROPERTY FOOTPRINT MAP
+          <span class="panel-badge">B</span>
+        </div>
+        <div class="panel-body">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>YEAR</th>
+                <th>PROPERTY</th>
+                <th>ROLE</th>
+                <th>TYPE</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="year">2026</td>
+                <td>Emirates Cricket Board</td>
+                <td class="role">Hydration Partner</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2025</td>
+                <td>TATA Women's Premier League</td>
+                <td class="role">Beverage Partner</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2025</td>
+                <td>Indian Racing Festival</td>
+                <td class="role">Hydration Partner</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2025</td>
+                <td>Lollapalooza India 2025</td>
+                <td class="role">Bottles for Change</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2025</td>
+                <td>Marathons (Procam series)</td>
+                <td class="role">Official Water</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2024</td>
+                <td>Deepika Padukone "Drink It Up"</td>
+                <td class="role">Brand Ambassador</td>
+                <td class="type-other">Campaign</td>
+              </tr>
+              <tr>
+                <td class="year">2024</td>
+                <td>Sunburn Festival</td>
+                <td class="role">Hydration Partner</td>
+                <td class="type-official">Official</td>
+              </tr>
+              <tr>
+                <td class="year">2023</td>
+                <td>Sustainability municipal drives</td>
+                <td class="role">CSR / ESG</td>
+                <td class="type-other">Civic</td>
+              </tr>
+              <tr>
+                <td class="year">2022</td>
+                <td>Multiple IPL ground activations</td>
+                <td class="role">Venue Rights</td>
+                <td class="type-official">Official</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="cat-chart">
+            <div class="cat-row">
+              <span class="cat-label">Sports Events</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="46"></div></div>
+              <span class="cat-pct">46%</span>
+            </div>
+            <div class="cat-row">
+              <span class="cat-label">Music Festivals</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="19"></div></div>
+              <span class="cat-pct">19%</span>
+            </div>
+            <div class="cat-row">
+              <span class="cat-label">Sustainability / ESG</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="15"></div></div>
+              <span class="cat-pct">15%</span>
+            </div>
+            <div class="cat-row">
+              <span class="cat-label">Brand Campaigns</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="8"></div></div>
+              <span class="cat-pct">8%</span>
+            </div>
+            <div class="cat-row">
+              <span class="cat-label">Motorsport</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="7"></div></div>
+              <span class="cat-pct">7%</span>
+            </div>
+            <div class="cat-row">
+              <span class="cat-label">Other</span>
+              <div class="cat-bar-wrap"><div class="cat-bar-fill" data-w="5"></div></div>
+              <span class="cat-pct">5%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL C -->
+      <div class="panel">
+        <div class="panel-header">
+          COMMUNITY INTELLIGENCE MATRIX
+          <span class="panel-badge">C</span>
+        </div>
+        <div class="panel-body">
+          <table class="matrix-table">
+            <thead>
+              <tr>
+                <th>COMMUNITY</th>
+                <th>TYPE</th>
+                <th>PERM</th>
+                <th>FIT</th>
+                <th>DEPTH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="comm-name">Sports Enthusiasts</td>
+                <td class="comm-type">Mainstream</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="74"></div></div></td>
+                <td class="fit-score">74/100</td>
+                <td class="depth-dots"><span class="dot-full">●●●</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Health Conscious</td>
+                <td class="comm-type">Lifestyle</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="81"></div></div></td>
+                <td class="fit-score">81/100</td>
+                <td class="depth-dots"><span class="dot-full">●●●</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Gen Z</td>
+                <td class="comm-type">Generational</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="63"></div></div></td>
+                <td class="fit-score">63/100</td>
+                <td class="depth-dots"><span class="dot-full">●●</span><span class="dot-empty">○</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Environmental Advocates</td>
+                <td class="comm-type">Values-led</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="86"></div></div></td>
+                <td class="fit-score">86/100</td>
+                <td class="depth-dots"><span class="dot-full">●●●</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Music Festival Goers</td>
+                <td class="comm-type">Cultural</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="72"></div></div></td>
+                <td class="fit-score">72/100</td>
+                <td class="depth-dots"><span class="dot-full">●●</span><span class="dot-empty">○</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Urban Consumers</td>
+                <td class="comm-type">Geographic</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="64"></div></div></td>
+                <td class="fit-score">64/100</td>
+                <td class="depth-dots"><span class="dot-full">●●</span><span class="dot-empty">○</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Youth Culture</td>
+                <td class="comm-type">Generational</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="61"></div></div></td>
+                <td class="fit-score">61/100</td>
+                <td class="depth-dots"><span class="dot-full">●</span><span class="dot-empty">○○</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Motorsports Audience</td>
+                <td class="comm-type">Niche</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="69"></div></div></td>
+                <td class="fit-score">69/100</td>
+                <td class="depth-dots"><span class="dot-full">●●</span><span class="dot-empty">○</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Health &amp; Wellness</td>
+                <td class="comm-type">Lifestyle</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="79"></div></div></td>
+                <td class="fit-score">79/100</td>
+                <td class="depth-dots"><span class="dot-full">●●●</span></td>
+              </tr>
+              <tr>
+                <td class="comm-name">Urban &amp; Emerging India</td>
+                <td class="comm-type">Demographic</td>
+                <td><div class="perm-bar-wrap"><div class="perm-bar-fill" data-w="66"></div></div></td>
+                <td class="fit-score">66/100</td>
+                <td class="depth-dots"><span class="dot-full">●●</span><span class="dot-empty">○</span></td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="matrix-note">
+            PERM = cultural permission score (0-100) · how open this community is to brand involvement<br>
+            DEPTH: ●●● full psychographic &nbsp; ●●○ demographic+ &nbsp; ●○○ surface only<br>
+            resear.sh profiles 25 cultural tribes · values · spending zones · rejection triggers · entry rules
+          </div>
+        </div>
+      </div>
+
+      <!-- PANEL D -->
+      <div class="panel">
+        <div class="panel-header">
+          MEASUREMENT DEPTH
+          <span class="panel-badge">D</span>
+        </div>
+        <div class="panel-body">
+          <div style="font-size:9px;color:var(--text-3);margin-bottom:10px;letter-spacing:0.08em;">WHAT WE MEASURE · vs. WHAT TRADITIONAL TOOLS MEASURE</div>
+
+          <table class="measure-table">
+            <thead>
+              <tr>
+                <th>AXIS</th>
+                <th style="text-align:left;padding-left:8px;">TRADITIONAL</th>
+                <th style="text-align:left;padding-left:8px;">RESEAR.SH</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="axis-label">Affluence</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="21"></div></div>
+                    <span class="bar-pct pct-trad">21%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="92"></div></div>
+                    <span class="bar-pct pct-brand">92%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="axis-label">Intent</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="28"></div></div>
+                    <span class="bar-pct pct-trad">28%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="84"></div></div>
+                    <span class="bar-pct pct-brand">84%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="axis-label">Psychography</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="0"></div></div>
+                    <span class="bar-pct pct-trad">0%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="97"></div></div>
+                    <span class="bar-pct pct-brand">97%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="axis-label">State of Mind</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="0"></div></div>
+                    <span class="bar-pct pct-trad">0%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="81"></div></div>
+                    <span class="bar-pct pct-brand">81%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="axis-label">Legacy</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="19"></div></div>
+                    <span class="bar-pct pct-trad">19%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="98"></div></div>
+                    <span class="bar-pct pct-brand">98%</span>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td class="axis-label">Trend</td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-trad" data-w="31"></div></div>
+                    <span class="bar-pct pct-trad">31%</span>
+                  </div>
+                </td>
+                <td class="bar-cell">
+                  <div class="bar-stack">
+                    <div class="bar-track"><div class="bar-fill-brand" data-w="89"></div></div>
+                    <span class="bar-pct pct-brand">89%</span>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="levi-block">
+            <div class="levi-label">LEVI COMPOSITE SCORE</div>
+            <span class="levi-score">87</span>
+            <span style="font-size:14px;color:var(--text-2);"> / 100</span>
+            <div class="levi-desc">
+              Game-theory based positioning index. First boardroom-grade<br>
+              metric for cultural sponsorship value. (Live Entertainment Value Index)
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /panels-grid -->
+
+    <!-- PANEL E — FULL WIDTH -->
+    <div class="panel-e fade-in">
+      <div class="panel-header" style="padding:8px 16px;">
+        INTELLIGENCE PARAMETERS
+        <span class="panel-badge">50+ PARAMETERS ACROSS EVERY ENTITY &nbsp; E</span>
+      </div>
+
+      <div class="params-grid">
+        <div class="param-col">
+          <div class="param-col-title">BRAND INTELLIGENCE</div>
+          <div class="param-item">Cultural Positioning Type</div>
+          <div class="param-item">Sponsorship Strategy Thesis</div>
+          <div class="param-item">Audience Targeting Logic</div>
+          <div class="param-item">Contract Renewal Pattern</div>
+          <div class="param-item">Exit &amp; Churn Triggers</div>
+          <div class="param-item">Competitive Vulnerability Score</div>
+          <div class="param-item">Portfolio Depth Classification</div>
+          <div class="param-item">Off-Record Activation History</div>
+          <div class="param-item">Next Opportunity Whitespace</div>
+          <div class="param-item">Competitor Overlap Matrix</div>
+          <div class="param-item">Shadow Network Connections</div>
+          <div class="param-item">SEC Tier of Audiences Reached</div>
+          <div class="param-item">Behavioral Trigger Pattern</div>
+        </div>
+
+        <div class="param-col">
+          <div class="param-col-title">PROPERTY &amp; EVENT INTELLIGENCE</div>
+          <div class="param-item">Multi-Year Sponsor Roster (2021–2026)</div>
+          <div class="param-item">Annual Category Occupancy</div>
+          <div class="param-item">First-Entrant Detection (new sponsors)</div>
+          <div class="param-item">Sponsor Churn Analysis</div>
+          <div class="param-item">Category Whitespace Map</div>
+          <div class="param-item">Audience Affluence Tier</div>
+          <div class="param-item">Psychographic Audience Profile</div>
+          <div class="param-item">Official vs Ambient Detection</div>
+          <div class="param-item">Activation Quality Examples</div>
+          <div class="param-item">Category Lock Analysis</div>
+          <div class="param-item">Audience Community Overlap</div>
+          <div class="param-item">Viral Moment Archive</div>
+          <div class="param-item">Celebrity Attendance Tracker</div>
+          <div class="param-item">Entry Playbook Assessment</div>
+        </div>
+
+        <div class="param-col">
+          <div class="param-col-title">COMMUNITY INTELLIGENCE</div>
+          <div class="param-item">Community Size (with confidence rating)</div>
+          <div class="param-item">Cultural Permission Score (0–100)</div>
+          <div class="param-item">Growth Trajectory</div>
+          <div class="param-item">Organic Brand Adoption List</div>
+          <div class="param-item">Brand Rejection Patterns</div>
+          <div class="param-item">First-Mover Territory Detection</div>
+          <div class="param-item">Commercialization Risk Level</div>
+          <div class="param-item">Authentic Entry Rules</div>
+          <div class="param-item">Spending Permission Zones</div>
+          <div class="param-item">Values Architecture Map</div>
+          <div class="param-item">Status Signal Inventory</div>
+          <div class="param-item">Aspiration Anchor Profiles</div>
+          <div class="param-item">Adjacent Community Map</div>
+          <div class="param-item">Identity Statement (in their voice)</div>
+          <div class="param-item">Retention Signal Analysis</div>
+        </div>
+
+        <div class="param-col">
+          <div class="param-col-title">DIGITAL &amp; SIGNAL INTELLIGENCE</div>
+          <div class="param-item">Brand-Owned Event Properties</div>
+          <div class="param-item">Streaming &amp; OTT Footprint</div>
+          <div class="param-item">Creator &amp; Podcast Associations</div>
+          <div class="param-item">Social Platform Community Signal</div>
+          <div class="param-item">Off-Record Digital Buzz Detection</div>
+          <div class="param-item">Summit &amp; Conference Transcript Mining</div>
+          <div class="param-item">Strategic Value Classification</div>
+          <div class="param-item">Cross-Brand Collision Signals</div>
+          <div class="param-item">Maslow Layer Classification</div>
+          <div class="param-item">Cultural Proximity Score</div>
+          <div class="param-item">Verified vs Inferred Signal Tag</div>
+          <div class="param-item">Demographic Crossover Detection</div>
+          <div class="param-item">Shadow IP Activity Tracking</div>
+        </div>
+      </div>
+
+      <div class="panel-e-footer">
+        "Not a data dump. A structured intelligence layer. Built from the ground up for operators who make high-stakes cultural decisions."
+      </div>
+    </div>
+
+    <!-- PANEL F — KNOWLEDGE GRAPH -->
+    <div class="panel-f-graph fade-in">
+      <div class="panel-header" style="padding:10px 22px;">
+        BRAND INTELLIGENCE NETWORK
+        <span class="panel-badge">CULTURAL KNOWLEDGE GRAPH &nbsp;·&nbsp; F</span>
+      </div>
+      <div class="graph-shell">
+        <canvas id="kgraph"></canvas>
+        <div class="crt-scanlines"></div>
+      </div>
+    </div>
+
+  </div><!-- /page-wrap -->
+
+  <!-- STATUS BAR -->
+  <div class="status-bar">
+    <span class="status-live">LIVE</span>
+    1,400+ brands indexed
+    <span class="status-sep">·</span>
+    88 cultural properties
+    <span class="status-sep">·</span>
+    918 knowledge edges
+    <span class="status-sep">·</span>
+    108 shadow signals
+    <span class="status-sep">·</span>
+    LEVI v2.0 active
+  </div>
+
+  <script>
+    // Animate bars when visible
+    function animateBars(container) {
+      // inline-bar (panel A)
+      container.querySelectorAll('.inline-bar[data-w]').forEach(function(el) {
+        el.style.width = el.dataset.w;
+      });
+      // cat-bar-fill (panel B %)
+      container.querySelectorAll('.cat-bar-fill[data-w]').forEach(function(el) {
+        el.style.width = el.dataset.w + '%';
+      });
+      // perm-bar-fill (panel C %)
+      container.querySelectorAll('.perm-bar-fill[data-w]').forEach(function(el) {
+        el.style.width = el.dataset.w + '%';
+      });
+      // bar-fill-trad / bar-fill-brand (panel D %)
+      container.querySelectorAll('.bar-fill-trad[data-w], .bar-fill-brand[data-w]').forEach(function(el) {
+        el.style.width = el.dataset.w + '%';
+      });
+    }
+
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          animateBars(entry.target);
+        }
+      });
+    }, { threshold: 0.05 });
+
+    document.querySelectorAll('.fade-in').forEach(function(el) {
+      observer.observe(el);
+    });
+  </script>
+
+  <script>
+  (function() {
+    var PHOS   = '#d4a030';
+    var PHOS_B = '#f0c040';
+    var PHOS_D = 'rgba(212,160,48,0.28)';
+    var PHOS_E = 'rgba(212,160,48,0.55)';
+    var NODE_BG = '#080c0a';
+    var NODE_BG2 = '#0c1008';
+    var DARK_BG = '#06080a';
+
+    var CW = 1060, CH = 460;
+    var cx = CW / 2, cy = CH / 2 - 10;
+
+    var NODES = [
+      { id: 'core',  rx: 0,    ry: 0,    lines: ['BISLERI INT.'],         sub: 'CORE · FMCG · INDIA',      w: 154, h: 52, type: 'core'  },
+      { id: 'port',  rx: 0,    ry:-170,  lines: ['SPONSORSHIP'],          sub: 'PORTFOLIO · 33+ PROPS',     w: 144, h: 44, type: 'pri'   },
+      { id: 'music', rx: 147,  ry:-85,   lines: ['MUSIC &'],              sub: 'CULTURE · 19%',             w: 130, h: 44, type: 'pri'   },
+      { id: 'health',rx: 147,  ry: 85,   lines: ['HEALTH /'],             sub: 'ESG · 22%',                 w: 130, h: 44, type: 'pri'   },
+      { id: 'comm',  rx: 0,    ry: 170,  lines: ['COMMUNITY'],            sub: 'REACH · 15 TRIBES',         w: 144, h: 44, type: 'pri'   },
+      { id: 'motor', rx:-147,  ry: 85,   lines: ['MOTORSPORT'],           sub: 'SIGNAL · 7%',               w: 130, h: 44, type: 'pri'   },
+      { id: 'comp',  rx:-147,  ry:-85,   lines: ['COMPETITOR'],           sub: 'MAP · 3 TRACKED',           w: 130, h: 44, type: 'pri'   },
+
+      { id: 'ecb',   rx: 60,   ry:-295,  lines: ['ECB 2026'],             sub: 'HYDRATION PARTNER',         w: 124, h: 40, type: 'leaf'  },
+      { id: 'wpl',   rx:-60,   ry:-295,  lines: ['WPL 2025'],             sub: 'BEVERAGE PARTNER',          w: 124, h: 40, type: 'leaf'  },
+      { id: 'sunb',  rx: 270,  ry:-130,  lines: ['SUNBURN'],              sub: 'FESTIVAL · 2024',           w: 118, h: 40, type: 'leaf'  },
+      { id: 'lolla', rx: 270,  ry: -52,  lines: ['LOLLAPALOOZA'],         sub: 'INDIA · 2025',              w: 118, h: 40, type: 'leaf'  },
+      { id: 'munic', rx: 270,  ry: 130,  lines: ['MUNICIPAL'],            sub: 'DRIVES · CSR',              w: 118, h: 40, type: 'leaf'  },
+      { id: 'bottle',rx: 270,  ry: 52,   lines: ['BOTTLES'],              sub: 'FOR CHANGE',                w: 118, h: 40, type: 'leaf'  },
+      { id: 'spt',   rx:-30,   ry: 295,  lines: ['SPORTS ENT.'],          sub: 'PERM 74 · FIT HIGH',        w: 130, h: 40, type: 'leaf'  },
+      { id: 'hlth',  rx: 30,   ry: 295,  lines: ['HEALTH CONSC.'],        sub: 'PERM 81 · FIT HIGH',        w: 130, h: 40, type: 'leaf'  },
+      { id: 'coca',  rx:-270,  ry:-130,  lines: ['COCA-COLA'],            sub: 'THREAT · HIGH',             w: 114, h: 40, type: 'threat'},
+      { id: 'pepsi', rx:-270,  ry: -52,  lines: ['PEPSICO'],              sub: 'THREAT · HIGH',             w: 114, h: 40, type: 'threat'},
+      { id: 'kinley',rx:-270,  ry:  52,  lines: ['KINLEY'],               sub: 'THREAT · MED',              w: 114, h: 40, type: 'threat'},
+    ];
+
+    var EDGES = [
+      { a:'core', b:'port',   w:2.2 },
+      { a:'core', b:'music',  w:2.2 },
+      { a:'core', b:'health', w:2.2 },
+      { a:'core', b:'comm',   w:2.2 },
+      { a:'core', b:'motor',  w:2.2 },
+      { a:'core', b:'comp',   w:2.2 },
+      { a:'port',  b:'ecb',   w:1.2 },
+      { a:'port',  b:'wpl',   w:1.2 },
+      { a:'music', b:'sunb',  w:1.2 },
+      { a:'music', b:'lolla', w:1.2 },
+      { a:'health',b:'munic', w:1.2 },
+      { a:'health',b:'bottle',w:1.2 },
+      { a:'comm',  b:'spt',   w:1.2 },
+      { a:'comm',  b:'hlth',  w:1.2 },
+      { a:'comp',  b:'coca',  w:1.2 },
+      { a:'comp',  b:'pepsi', w:1.2 },
+      { a:'comp',  b:'kinley',w:1.0 },
+    ];
+
+    var nodeMap = {};
+    NODES.forEach(function(n) {
+      n.x = cx + n.rx;
+      n.y = cy + n.ry;
+      nodeMap[n.id] = n;
+    });
+
+    var packets = [];
+    EDGES.forEach(function(e, i) {
+      packets.push({ edge: i, t: (i * 0.13) % 1 });
+    });
+
+    var canvas = document.getElementById('kgraph');
+    canvas.width  = CW;
+    canvas.height = CH;
+    var ctx = canvas.getContext('2d');
+    ctx.font = '700 11px "JetBrains Mono", monospace';
+
+    function drawGrid(ctx) {
+      ctx.strokeStyle = 'rgba(212,160,48,0.04)';
+      ctx.lineWidth = 0.5;
+      for (var gx = 0; gx < CW; gx += 40) {
+        ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, CH); ctx.stroke();
+      }
+      for (var gy = 0; gy < CH; gy += 40) {
+        ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(CW, gy); ctx.stroke();
+      }
+    }
+
+    function drawEdge(ctx, e) {
+      var a = nodeMap[e.a], b = nodeMap[e.b];
+      ctx.save();
+      ctx.shadowColor = PHOS;
+      ctx.shadowBlur  = 4;
+      ctx.strokeStyle = PHOS_D;
+      ctx.lineWidth   = e.w || 1;
+      ctx.setLineDash(e.w >= 2 ? [] : [5, 4]);
+      ctx.beginPath();
+      ctx.moveTo(a.x, a.y);
+      ctx.lineTo(b.x, b.y);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+    }
+
+    function drawArrow(ctx, e) {
+      var a = nodeMap[e.a], b = nodeMap[e.b];
+      var ang = Math.atan2(b.y - a.y, b.x - a.x);
+      var hw = b.w / 2 + 2, hh = b.h / 2 + 2;
+      var ex = b.x, ey = b.y;
+      var cos = Math.cos(ang), sin = Math.sin(ang);
+      var absCos = Math.abs(cos), absSin = Math.abs(sin);
+      var scale = absCos > absSin ? hw / absCos : hh / absSin;
+      ex = b.x - cos * scale;
+      ey = b.y - sin * scale;
+      var aLen = 7, aWid = 4;
+      ctx.save();
+      ctx.shadowColor = PHOS;
+      ctx.shadowBlur  = 5;
+      ctx.fillStyle   = PHOS_E;
+      ctx.beginPath();
+      ctx.moveTo(ex, ey);
+      ctx.lineTo(ex - aLen * cos + aWid * sin, ey - aLen * sin - aWid * cos);
+      ctx.lineTo(ex - aLen * cos - aWid * sin, ey - aLen * sin + aWid * cos);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    function drawNode(ctx, n, pulse) {
+      var x = n.x, y = n.y, w = n.w, h = n.h;
+      var isCore = n.type === 'core';
+      var isThreat = n.type === 'threat';
+      var borderCol = isThreat ? '#8a4040' : (isCore ? PHOS_B : PHOS);
+      var textCol   = isThreat ? '#c06060' : (isCore ? '#ffe090' : PHOS_B);
+      var bgCol     = isCore ? '#0e1008' : (isThreat ? '#0e0808' : NODE_BG);
+      var glowStr   = isCore ? (10 + pulse * 6) : (n.type === 'leaf' ? 3 : 5);
+
+      var half = 3;
+      ctx.save();
+      ctx.shadowColor = borderCol;
+      ctx.shadowBlur  = glowStr;
+      ctx.fillStyle   = bgCol;
+      ctx.strokeStyle = borderCol;
+      ctx.lineWidth   = isCore ? 1.8 : 1.1;
+
+      ctx.beginPath();
+      ctx.moveTo(x - w/2 + half, y - h/2);
+      ctx.lineTo(x + w/2 - half, y - h/2);
+      ctx.lineTo(x + w/2,        y - h/2 + half);
+      ctx.lineTo(x + w/2,        y + h/2 - half);
+      ctx.lineTo(x + w/2 - half, y + h/2);
+      ctx.lineTo(x - w/2 + half, y + h/2);
+      ctx.lineTo(x - w/2,        y + h/2 - half);
+      ctx.lineTo(x - w/2,        y - h/2 + half);
+      ctx.closePath();
+      ctx.fill();
+      ctx.stroke();
+      ctx.restore();
+
+      ctx.save();
+      ctx.shadowColor = textCol;
+      ctx.shadowBlur  = isCore ? 8 : 4;
+      ctx.fillStyle   = textCol;
+      ctx.textAlign   = 'center';
+      ctx.textBaseline = 'middle';
+
+      var mainFontSize = isCore ? 12 : (n.type === 'leaf' ? 10 : 11);
+      var subFontSize  = isCore ? 9  : 8.5;
+
+      ctx.font = '700 ' + mainFontSize + 'px "JetBrains Mono", monospace';
+      ctx.fillText(n.lines[0], x, y - (n.sub ? 8 : 0));
+
+      if (n.sub) {
+        ctx.font = '400 ' + subFontSize + 'px "JetBrains Mono", monospace';
+        ctx.fillStyle = isThreat ? 'rgba(192,96,96,0.7)' : (isCore ? 'rgba(255,200,100,0.6)' : 'rgba(212,160,48,0.6)');
+        ctx.shadowBlur = 2;
+        ctx.fillText(n.sub, x, y + 8);
+      }
+      ctx.restore();
+
+      if (isCore) {
+        ctx.save();
+        ctx.strokeStyle = 'rgba(255,200,80,' + (0.08 + pulse * 0.06) + ')';
+        ctx.lineWidth   = 0.8;
+        ctx.shadowColor = PHOS;
+        ctx.shadowBlur  = 12;
+        ctx.beginPath();
+        ctx.rect(x - w/2 - 6, y - h/2 - 6, w + 12, h + 12);
+        ctx.stroke();
+        ctx.restore();
+      }
+    }
+
+    function drawPacket(ctx, e, t) {
+      var a = nodeMap[e.a], b = nodeMap[e.b];
+      var px = a.x + (b.x - a.x) * t;
+      var py = a.y + (b.y - a.y) * t;
+      ctx.save();
+      ctx.shadowColor = '#ffe080';
+      ctx.shadowBlur  = 10;
+      ctx.fillStyle   = '#ffe090';
+      ctx.beginPath();
+      ctx.arc(px, py, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
+
+    var startTime = null;
+    function render(ts) {
+      if (!startTime) startTime = ts;
+      var elapsed = (ts - startTime) / 1000;
+      var pulse = (Math.sin(elapsed * 1.8) + 1) / 2;
+
+      ctx.fillStyle = DARK_BG;
+      ctx.fillRect(0, 0, CW, CH);
+
+      drawGrid(ctx);
+
+      EDGES.forEach(function(e) { drawEdge(ctx, e); });
+      EDGES.forEach(function(e) { drawArrow(ctx, e); });
+
+      packets.forEach(function(p, i) {
+        p.t = (p.t + 0.0025) % 1;
+        drawPacket(ctx, EDGES[p.edge], p.t);
+      });
+
+      NODES.forEach(function(n) { drawNode(ctx, n, pulse); });
+
+      requestAnimationFrame(render);
+    }
+
+    requestAnimationFrame(render);
+  })();
+  </script>
+
+</body>
+</html>
