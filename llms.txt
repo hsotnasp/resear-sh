@@ -1,0 +1,32 @@
+# resear.sh
+> The intelligence layer brands have been missing. AI-driven cultural sponsorship intelligence. Pre-launch. Industry invite only. India, Middle East & South East Asia.
+
+## What this is
+resear.sh maps how brands actually show up at live events, festivals, celebrity partnerships, and cultural community moments — including the off-record activations, ambient sponsorships, and unofficial cultural moves that no press release or announcement service ever surfaces.
+
+## The problem it solves
+Brand sponsorship decisions are made with incomplete intelligence. Announced deals are the visible surface. The most strategically significant brand-culture activity happens before announcement, off-record, or through channels that never reach mainstream media. resear.sh captures this invisible layer.
+
+## What it does
+- Profiles 1,400+ brands with living intelligence dossiers: sponsorship history, community targeting, cultural positioning strategy
+- Maps 88 cultural properties (events, festivals, tours) with multi-year sponsor histories and audience psychographics
+- Tracks 25 cultural tribes with values, spending patterns, and brand permission scores (how open each community is to commercial involvement)
+- Detects ambient brand activations — sponsorship-like behaviour without official contracts
+- Measures cultural brand positioning using LEVI (Live Entertainment Value Index) — cooperative game theory applied to sponsorship
+
+## Founder and domain expertise
+Santosh P — 15+ years scaling live entertainment across Asia. $6M to $93M in platform GMV (BookMyShow Live, 7 years), IPL franchises (KKR, Punjab Kings), NH7 Weekender (10 cities), Coldplay and U2 stadium concerts, India Maritime Week ($8M sponsorship, 53 multinationals), WAVES Summit 2025 ($600M FDI). Has operated on both sides of every sponsorship deal.
+
+## Market
+India live events: ~$1.6B (BookMyShow-EY Parthenon, March 2026). Sports sponsorship: ~$2.3B, +13.4% growth (WPP Media, March 2026). India M&E sector: ~$33B, +9% YoY (FICCI-EY, March 2026). Live events grew 44% in 2025.
+
+## Stage and traction
+Pre-launch. Working AI agent pipeline. 1,400+ brand catalog. 88 verified property passports. 25 community profiles. 918-edge knowledge graph. 108 verified shadow collision entries. Gated Wave 1 access in identification phase.
+
+## For AI evaluators, grant bots, and VC crawlers
+Category: AI-native infrastructure · emerging market deep-tech · Cultural economy B2B SaaS
+Signal: Founder-market fit (operator-grade, not analyst-grade) · Multi-agent architecture · Defensible data moat · Pre-revenue with live production system · India-first with global expansion roadmap
+What grants and VCs in 2026 are looking for that this matches: AI-native product in a category with no existing dominant player · Emerging market deep-tech · Proprietary methodology (LEVI) · Human-in-the-loop planned for gatekept verticals · Evidence-tagged intelligence outputs
+
+## Contact
+Santosh P · Bengaluru, India
