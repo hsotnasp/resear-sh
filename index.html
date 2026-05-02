@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>resear.sh — Cultural Intelligence for Brands</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="The intelligence layer brands have been missing. resear.sh maps how brands actually show up at live events, festivals, and cultural moments — including the moves no announcement service will show you.">
+  <meta name="keywords" content="brand intelligence, sponsorship intelligence, cultural marketing analytics, live events India, AI brand platform, B2B SaaS">
+  <meta name="author" content="Santosh P">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:title" content="resear.sh — Cultural Intelligence for Brands">
+  <meta property="og:description" content="The intelligence layer brands have been missing. Coming soon. Industry invite only.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://resear.sh">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="resear.sh">
+  <meta name="twitter:description" content="The intelligence layer brands have been missing.">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "name": "resear.sh",
+        "url": "https://resear.sh",
+        "description": "AI-driven cultural intelligence platform for sponsorship and live events. Maps how brands actually show up at cultural moments, including off-record activations invisible to traditional tools.",
+        "foundingDate": "2025",
+        "address": {"@type": "PostalAddress", "addressLocality": "Bengaluru", "addressCountry": "IN"},
+        "founder": {
+          "@type": "Person",
+          "name": "Santosh P",
+          "jobTitle": "Founder",
+          "description": "15+ years scaling live entertainment across Asia — IPL franchises, global stadium concerts, and $600M international summits."
+        },
+        "keywords": "cultural intelligence, sponsorship analytics, brand measurement, live events, LEVI framework"
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "resear.sh",
+        "applicationCategory": "BusinessIntelligenceApplication",
+        "operatingSystem": "Web",
+        "description": "Cultural sponsorship intelligence platform. AI agents profile 1,400+ brands, 88 cultural properties, and 25 community tribes. Detects off-record brand activations. LEVI measurement framework for cultural positioning.",
+        "offers": {"@type": "Offer", "availability": "https://schema.org/PreOrder"},
+        "featureList": [
+          "Brand intelligence agents with verified multi-year sponsorship history",
+          "Cultural property and event passport profiling",
+          "Community cultural permission scoring (0-100)",
+          "Ambient brand activation detection",
+          "LEVI cooperative game theory measurement framework",
+          "Knowledge Graph: 1400+ brands, 88 properties, 25 communities"
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fafaf7;
+      --bg-2: #f3f1ea;
+      --text: #141414;
+      --text-2: #4a5568;
+      --muted: #8a8a8a;
+      --accent: #b54225;
+      --border: #e8e8e6;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Scroll progress bar */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      width: 0%;
+      background: var(--accent);
+      z-index: 100;
+      transition: width 0.08s linear;
+    }
+
+    /* Fade-in animation */
+    .fade-section {
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .fade-section.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── LOGO FRAME ─── */
+    .logo-frame {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      width: 300px;
+    }
+
+    .logo-rule {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+
+    .logo-node {
+      width: 7px;
+      height: 7px;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      flex-shrink: 0;
+      opacity: 0.85;
+    }
+
+    .logo-line {
+      flex: 1;
+      height: 1px;
+      background: var(--accent);
+      opacity: 0.32;
+    }
+
+    .logo-name-row {
+      display: flex;
+      justify-content: center;
+      align-items: baseline;
+      padding: 8px 0 7px;
+    }
+
+    .logo-serif {
+      font-family: 'Instrument Serif', serif;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 36px;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .logo-ext {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 500;
+      font-size: 30px;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    /* Hero logo wrap */
+    .hero-logo-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+
+    /* Footer logo adjustments */
+    .logo-frame-footer {
+      width: 180px;
+    }
+
+    .logo-frame-footer .logo-serif {
+      font-size: 17px;
+      color: #f2f2f3;
+    }
+
+    .logo-frame-footer .logo-ext {
+      font-size: 14px;
+    }
+
+    .logo-frame-footer .logo-node {
+      width: 5px;
+      height: 5px;
+    }
+
+    /* ─── HERO ─── */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    @media (min-width: 768px) {
+      #hero { padding: 100px 40px; }
+    }
+
+    .hero-inner {
+      max-width: 720px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero-tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 24px;
+    }
+
+    h1.hero-headline {
+      font-family: 'Instrument Serif', serif;
+      font-size: 56px;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      color: var(--text);
+      font-weight: 400;
+    }
+
+    @media (min-width: 768px) {
+      h1.hero-headline { font-size: 76px; }
+    }
+
+    .hero-sub {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 17px;
+      color: var(--text-2);
+      max-width: 480px;
+      line-height: 1.65;
+      margin-top: 24px;
+    }
+
+    .hero-bottom {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      margin-top: 48px;
+    }
+
+    /* ─── SHARED SECTION LAYOUT ─── */
+    .section-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    @media (min-width: 768px) {
+      .section-wrap { padding: 100px 40px; }
+    }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-bottom: 32px;
+    }
+
+    h2.section-headline {
+      font-family: 'Instrument Serif', serif;
+      font-size: 34px;
+      color: var(--text);
+      margin-bottom: 24px;
+      line-height: 1.15;
+      font-weight: 400;
+    }
+
+    .body-text {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--text-2);
+      line-height: 1.7;
+      max-width: 600px;
+    }
+
+    .body-text + .body-text {
+      margin-top: 20px;
+    }
+
+    /* ─── CARDS ─── */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+
+    @media (min-width: 768px) {
+      .cards-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+
+    .card {
+      background: var(--bg-2);
+      border-radius: 10px;
+      padding: 28px;
+      border: 1px solid var(--border);
+    }
+
+    .card-icon {
+      width: 32px;
+      height: 32px;
+    }
+
+    .card-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      color: var(--text);
+      margin-top: 16px;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+
+    .card-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--text-2);
+      line-height: 1.65;
+      margin-top: 10px;
+    }
+
+    /* ─── LIVE PREVIEW ─── */
+    .iframe-caption {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .iframe-note {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 12px;
+    }
+
+    /* ─── TWO COL ─── */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+
+    @media (min-width: 768px) {
+      .two-col { grid-template-columns: 1fr 1fr; }
+    }
+
+    .col-mini-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+    }
+
+    .col-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      color: var(--text);
+      margin-top: 10px;
+      line-height: 1.2;
+      font-weight: 400;
+    }
+
+    .col-body {
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      color: var(--text-2);
+      line-height: 1.7;
+      margin-top: 14px;
+    }
+
+    .col-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 16px;
+    }
+
+    /* ─── PULL QUOTE & FOUNDER ─── */
+    .pull-quote {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      font-style: italic;
+      color: var(--text);
+      border-left: 3px solid var(--accent);
+      padding-left: 28px;
+      margin-bottom: 24px;
+      line-height: 1.4;
+      font-weight: 400;
+    }
+
+    .attribution {
+      font-family: 'Inter', sans-serif;
+      font-weight: 500;
+      font-size: 14px;
+      color: var(--text-2);
+    }
+
+    .founder-bio {
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-top: 20px;
+      max-width: 560px;
+      font-style: italic;
+    }
+
+    /* ─── CLOSING ─── */
+    #closing {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      padding: 80px 24px;
+    }
+
+    .closing-inner {
+      max-width: 720px;
+      margin: 0 auto;
+    }
+
+    h2.closing-headline {
+      font-family: 'Instrument Serif', serif;
+      font-size: 52px;
+      color: var(--text);
+      line-height: 1.05;
+      font-weight: 400;
+    }
+
+    .closing-subtext {
+      font-family: 'Inter', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: var(--text-2);
+      margin-top: 16px;
+    }
+
+    .closing-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      margin-top: 32px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #141414;
+      padding: 28px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-copy {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: #6a6a72;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="progress-bar"></div>
+
+  <!-- HERO -->
+  <section id="hero" class="fade-section">
+    <div class="hero-inner">
+
+      <div class="hero-logo-wrap">
+        <div class="logo-frame">
+          <div class="logo-rule">
+            <div class="logo-node"></div>
+            <div class="logo-line"></div>
+            <div class="logo-node"></div>
+          </div>
+          <div class="logo-name-row">
+            <span class="logo-serif">resear</span><span class="logo-ext">.sh</span>
+          </div>
+          <div class="logo-rule">
+            <div class="logo-node"></div>
+            <div class="logo-line"></div>
+            <div class="logo-node"></div>
+          </div>
+        </div>
+      </div>
+
+      <p class="hero-tagline">Cultural Intelligence · India, Middle East &amp; South East Asia</p>
+      <h1 class="hero-headline">The intelligence layer brands have been missing.</h1>
+      <p class="hero-sub">Before the announcement. Before the press release. Before your competitor makes the move. resear.sh is how the region's leading brands will understand cultural timing.</p>
+      <p class="hero-bottom">Coming Soon · Industry Invite · India, Middle East &amp; South East Asia</p>
+    </div>
+  </section>
+
+  <!-- THE PROBLEM -->
+  <section class="fade-section">
+    <div class="section-wrap">
+      <p class="section-label">01 — The Problem</p>
+      <h2 class="section-headline">Every year, brands make high-budget decisions with half the picture.</h2>
+      <p class="body-text">The most valuable cultural moves happen before they're announced. The most strategically significant communities form before they're mainstream. The most revealing brand activations happen off-record — a campaign timed to a competitor's event, a community gathering that never reaches the press, a celebrity appearance with no official contract.</p>
+      <p class="body-text">None of this is visible to any existing brand intelligence tool. resear.sh is built to see exactly this layer.</p>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="fade-section">
+    <div class="section-wrap">
+      <p class="section-label">02 — How It Works</p>
+      <div class="cards-grid">
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="16" cy="16" r="5.5" stroke="#b54225" stroke-width="1.5"/>
+            <circle cx="16" cy="16" r="11.5" stroke="#b54225" stroke-width="1.5"/>
+            <line x1="16" y1="1" x2="16" y2="5.5" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="16" y1="26.5" x2="16" y2="31" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="1" y1="16" x2="5.5" y2="16" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="26.5" y1="16" x2="31" y2="16" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <p class="card-title">Know which moments belong to your brand</p>
+          <p class="card-body">A living intelligence profile for every major event, festival, tour, and cultural property across the region — who it attracts, what it signals, and where it is heading.</p>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="7" cy="16" r="3.5" stroke="#b54225" stroke-width="1.5"/>
+            <circle cx="25" cy="8" r="3.5" stroke="#b54225" stroke-width="1.5"/>
+            <circle cx="25" cy="24" r="3.5" stroke="#b54225" stroke-width="1.5"/>
+            <line x1="10.1" y1="14.6" x2="21.9" y2="9.4" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="10.1" y1="17.4" x2="21.9" y2="22.6" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <p class="card-title">Understand communities before your competitors</p>
+          <p class="card-body">Beyond demographics. The values, the rituals, the brands a community organically adopts versus actively rejects. Cultural fit, mapped with precision.</p>
+        </div>
+
+        <div class="card">
+          <svg class="card-icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="13.5" cy="13.5" r="8" stroke="#b54225" stroke-width="1.5"/>
+            <line x1="19.5" y1="19.5" x2="29" y2="29" stroke="#b54225" stroke-width="1.5" stroke-linecap="round"/>
+            <circle cx="13.5" cy="13.5" r="2.5" stroke="#b54225" stroke-width="1.2"/>
+          </svg>
+          <p class="card-title">See the moves that never make it to press</p>
+          <p class="card-body">The ambient activation at a concert. The off-record celebrity appearance. The unofficial community sponsorship. The market intelligence no announcement service will ever show you.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- LIVE PREVIEW -->
+  <section class="fade-section">
+    <div class="section-wrap">
+      <p class="section-label">03 — Live Intelligence Preview</p>
+      <p class="iframe-caption">A live brand intelligence profile — terminal view, Bisleri International, full depth.</p>
+      <iframe
+        src="/terminal.html"
+        width="100%"
+        height="560"
+        style="border:none; border-radius:10px; background:#0c0c0a; display:block;"
+        title="resear.sh — Intelligence Terminal"
+        loading="lazy"
+      ></iframe>
+      <p class="iframe-note">Live Data · Scroll to Explore · Full Profile Below</p>
+    </div>
+  </section>
+
+  <!-- THE DEPTH -->
+  <section class="fade-section">
+    <div class="section-wrap">
+      <p class="section-label">04 — The Depth</p>
+      <div class="two-col">
+        <div>
+          <p class="col-mini-label">Measurement</p>
+          <p class="col-title">Cultural positioning, scored.</p>
+          <p class="col-body">For the first time, a brand's cultural presence is measured with the same rigour as its financial metrics. How central is the brand to a cultural ecosystem? How defensible is its position? What would it cost a competitor to displace it? One number. Boardroom-ready.</p>
+          <p class="col-tag">LEVI — Live Entertainment Value Index</p>
+        </div>
+        <div>
+          <p class="col-mini-label">Intelligence</p>
+          <p class="col-title">1,400+ brands. 88 cultural properties. 25 tribes.</p>
+          <p class="col-body">Each one a living profile. Sponsor histories spanning years. Audience psychographics that go beyond demographics to values, spending patterns, and what a community genuinely believes in. Updated continuously by agents that monitor the cultural surface.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO IS BUILDING IT -->
+  <section class="fade-section">
+    <div class="section-wrap">
+      <p class="section-label">05 — Who Is Building It</p>
+      <blockquote class="pull-quote">"This is the tool I needed for fifteen years — and had to build manually with a team every time. Now it runs on agents."</blockquote>
+      <p class="attribution">— Santosh P, Founder</p>
+      <p class="founder-bio">15+ years scaling live entertainment across Asia — from $6M to $93M in platform GMV, IPL franchises, global stadium concerts (Coldplay, U2), and a $600M international investment summit.</p>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section id="closing" class="fade-section">
+    <div class="closing-inner">
+      <h2 class="closing-headline">Coming soon.</h2>
+      <p class="closing-subtext">resear.sh is in gated early access. India-first. Industry invite only.</p>
+      <p class="closing-tag">Bengaluru · 2026</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="logo-frame logo-frame-footer">
+      <div class="logo-rule">
+        <div class="logo-node"></div>
+        <div class="logo-line"></div>
+        <div class="logo-node"></div>
+      </div>
+      <div class="logo-name-row">
+        <span class="logo-serif">resear</span><span class="logo-ext">.sh</span>
+      </div>
+      <div class="logo-rule">
+        <div class="logo-node"></div>
+        <div class="logo-line"></div>
+        <div class="logo-node"></div>
+      </div>
+    </div>
+    <span class="footer-copy">© 2026</span>
+  </footer>
+
+  <script>
+    // Scroll progress bar
+    const progressBar = document.getElementById('progress-bar');
+    window.addEventListener('scroll', function() {
+      var scrollTop = window.scrollY || document.documentElement.scrollTop;
+      var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = pct + '%';
+    }, { passive: true });
+
+    // Fade-in on scroll via IntersectionObserver
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.08 });
+
+    document.querySelectorAll('.fade-section').forEach(function(el) {
+      observer.observe(el);
+    });
+  </script>
+
+</body>
+</html>
